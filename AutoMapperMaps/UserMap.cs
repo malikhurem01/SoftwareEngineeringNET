@@ -8,6 +8,8 @@ namespace ResumeMaker.API.AutoMapperMaps
     {
         public UserMap() {
             CreateMap<User, GetUserDto>();
+            CreateMap<RegisterUserDto, User>();
+            CreateMap<RegisterUserDto, UserLoginDto>();
         }
     }
 }
