@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using ResumeMaker.API.DTOs;
 using ResumeMaker.Models;
@@ -14,14 +15,16 @@ namespace ResumeMaker.Services
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly IConfiguration _configuration;
+        private readonly IMapper _mapper;
 
-        public AuthService(UserManager<IdentityUser> userManager, IConfiguration configuration, SignInManager<IdentityUser> signInManager)
+        public AuthService(UserManager<IdentityUser> userManager, IConfiguration configuration, SignInManager<IdentityUser> signInManager, IMapper mapper)
         {
             _userManager = userManager;
             _configuration = configuration;
             _signInManager = signInManager;
+            _mapper = mapper;
         }
-        public Task<ServiceResponse<User>> GetUserByToken(string token)
+        public Task<ServiceResponse<GetUserDto>> GetUserByToken(string token)
         {
             throw new NotImplementedException();
         }
@@ -49,9 +52,23 @@ namespace ResumeMaker.Services
             return response;
         }
 
-        public Task<ServiceResponse<User>> RegisterUser()
+        public async Task<ServiceResponse<GetUserDto>> RegisterUser(RegisterUserDto user)
         {
-            throw new NotImplementedException();
+            ServiceResponse<GetUserDto> response = new ServiceResponse<GetUserDto>();
+            var userMap = _mapper.Map<User>(user);
+            var result = await _userManager.CreateAsync(userMap, user.Password);
+            StringBuilder stringBuilder = new StringBuilder();
+            if (!result.Succeeded)
+            {
+                foreach (IdentityError error in result.Errors)
+                {
+                    stringBuilder.Append(error.Description);
+                }
+                throw new BadRequestException(stringBuilder.ToString());
+            }
+            response = await Login(_mapper.Map<UserLoginDto>(user));
+            return response;
+
         }
 
         private string CreateToken(User user)
