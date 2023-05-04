@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
+using ResumeMaker.API.DTOs;
 using ResumeMaker.Models;
+using ResumeMaker.Models.Exceptions;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -24,12 +26,26 @@ namespace ResumeMaker.Services
             throw new NotImplementedException();
         }
 
-        public ServiceResponse<User> Login(User user)
+        public async Task<ServiceResponse<GetUserDto>> Login(UserLoginDto user)
         {
-           ServiceResponse<User> response = new ServiceResponse<User>();
-            /*
-             * USER LOGIN LOGI
-            */
+            ServiceResponse<GetUserDto> response = new ServiceResponse<GetUserDto>();
+            var fetchedUser = await _userManager.FindByNameAsync(user.UserName);
+            if (fetchedUser == null)
+            {
+                throw new BadRequestException("Wrong credentials");
+            }
+            else
+            {
+                var result = await _signInManager.CheckPasswordSignInAsync(fetchedUser, user.Password, false);
+                if (!result.Succeeded)
+                {
+                    throw new BadRequestException("Wrong credentials");
+                }
+                var getUserDto = _mapper.Map<GetUserDto>(fetchedUser);
+                getUserDto.Token = CreateToken((User)fetchedUser);
+                response.Data = getUserDto;
+                response.Message = "User " + user.UserName + " has successfully logged in.";
+            }
             return response;
         }
 

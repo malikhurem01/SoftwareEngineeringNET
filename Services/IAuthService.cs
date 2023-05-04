@@ -1,4 +1,5 @@
-﻿using ResumeMaker.Models;
+﻿using ResumeMaker.API.DTOs;
+using ResumeMaker.Models;
 
 namespace ResumeMaker.Services
 {
@@ -6,6 +7,6 @@ namespace ResumeMaker.Services
     {
         Task<ServiceResponse<User>> RegisterUser();
         Task<ServiceResponse<User>> GetUserByToken(string token);
-        ServiceResponse<User> Login(User user);
+        Task<ServiceResponse<GetUserDto>> Login(UserLoginDto user);
     }
 }
