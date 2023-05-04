@@ -32,7 +32,7 @@ namespace ResumeMaker.Services
         public async Task<ServiceResponse<GetUserDto>> Login(UserLoginDto user)
         {
             ServiceResponse<GetUserDto> response = new ServiceResponse<GetUserDto>();
-            var fetchedUser = await _userManager.FindByNameAsync(user.UserName);
+            var fetchedUser = await _userManager.FindByEmailAsync(user.Email);
             if (fetchedUser == null)
             {
                 throw new BadRequestException("Wrong credentials");
@@ -47,7 +47,7 @@ namespace ResumeMaker.Services
                 var getUserDto = _mapper.Map<GetUserDto>(fetchedUser);
                 getUserDto.Token = CreateToken((User)fetchedUser);
                 response.Data = getUserDto;
-                response.Message = "User " + user.UserName + " has successfully logged in.";
+                response.Message = "User " + user.Email + " has successfully logged in.";
             }
             return response;
         }
@@ -56,6 +56,7 @@ namespace ResumeMaker.Services
         {
             ServiceResponse<GetUserDto> response = new ServiceResponse<GetUserDto>();
             var userMap = _mapper.Map<User>(user);
+            userMap.UserName = user.FirstName.ToLower() + user.LastName.ToLower();
             var result = await _userManager.CreateAsync(userMap, user.Password);
             StringBuilder stringBuilder = new StringBuilder();
             if (!result.Succeeded)
@@ -66,7 +67,7 @@ namespace ResumeMaker.Services
                 }
                 throw new BadRequestException(stringBuilder.ToString());
             }
-            response = await Login(_mapper.Map<UserLoginDto>(user));
+            response = null; // await Login(_mapper.Map<UserLoginDto>(user));
             return response;
 
         }
