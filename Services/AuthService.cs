@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
+using ResumeMaker.API.DTOs;
 using ResumeMaker.Models;
+using ResumeMaker.Models.Exceptions;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -12,33 +15,64 @@ namespace ResumeMaker.Services
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly IConfiguration _configuration;
+        private readonly IMapper _mapper;
 
-        public AuthService(UserManager<IdentityUser> userManager, IConfiguration configuration, SignInManager<IdentityUser> signInManager)
+        public AuthService(UserManager<IdentityUser> userManager, IConfiguration configuration, SignInManager<IdentityUser> signInManager, IMapper mapper)
         {
             _userManager = userManager;
             _configuration = configuration;
             _signInManager = signInManager;
+            _mapper = mapper;
         }
-        public Task<ServiceResponse<User>> GetUserByToken(string token)
+        public Task<ServiceResponse<GetUserDto>> GetUserByToken(string token)
         {
             throw new NotImplementedException();
         }
 
-        public ServiceResponse<User> Login(User user)
+        public async Task<ServiceResponse<GetUserDto>> Login(UserLoginDto user)
         {
-           ServiceResponse<User> response = new ServiceResponse<User>();
-            /*
-             * USER LOGIN LOGI
-            */
+            ServiceResponse<GetUserDto> response = new ServiceResponse<GetUserDto>();
+            var fetchedUser = await _userManager.FindByEmailAsync(user.Email);
+            if (fetchedUser == null)
+            {
+                throw new BadRequestException("Wrong credentials");
+            }
+            else
+            {
+                var result = await _signInManager.CheckPasswordSignInAsync(fetchedUser, user.Password, false);
+                if (!result.Succeeded)
+                {
+                    throw new BadRequestException("Wrong credentials");
+                }
+                var getUserDto = _mapper.Map<GetUserDto>(fetchedUser);
+                getUserDto.Token = CreateToken((User)fetchedUser);
+                response.Data = getUserDto;
+                response.Message = "User " + user.Email + " has successfully logged in.";
+            }
             return response;
         }
 
-        public Task<ServiceResponse<User>> RegisterUser()
+        public async Task<ServiceResponse<GetUserDto>> RegisterUser(RegisterUserDto user)
         {
-            throw new NotImplementedException();
+            ServiceResponse<GetUserDto> response = new ServiceResponse<GetUserDto>();
+            var userMap = _mapper.Map<User>(user);
+            userMap.UserName = user.FirstName.ToLower() + user.LastName.ToLower();
+            var result = await _userManager.CreateAsync(userMap, user.Password);
+            StringBuilder stringBuilder = new StringBuilder();
+            if (!result.Succeeded)
+            {
+                foreach (IdentityError error in result.Errors)
+                {
+                    stringBuilder.Append(error.Description);
+                }
+                throw new BadRequestException(stringBuilder.ToString());
+            }
+            response = null; // await Login(_mapper.Map<UserLoginDto>(user));
+            return response;
+
         }
 
-        private string CreateToken(User user)
+        public string CreateToken(User user)
         {
             List<Claim> claims = new List<Claim>
             {
