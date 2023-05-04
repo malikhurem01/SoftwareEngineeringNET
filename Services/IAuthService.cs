@@ -8,5 +8,7 @@ namespace ResumeMaker.Services
         Task<ServiceResponse<GetUserDto>> RegisterUser(RegisterUserDto user);
         Task<ServiceResponse<GetUserDto>> GetUserByToken(string token);
         Task<ServiceResponse<GetUserDto>> Login(UserLoginDto user);
+        string CreateToken(User user);
+
     }
 }
