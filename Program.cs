@@ -3,10 +3,11 @@ using ResumeMaker.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.RegisterAutoMapper();
-builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.RegisterAutoMapper();
+builder.Services.AddControllers();
+builder.Services.RegisterServices();
 builder.Services.RegisterDBContext(builder.Configuration);
 builder.Services.RegisterIdentityAuthentication(builder.Configuration);
 
