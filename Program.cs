@@ -1,7 +1,9 @@
+using ResumeMaker.API.Extensions;
 using ResumeMaker.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.RegisterAutoMapper();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
