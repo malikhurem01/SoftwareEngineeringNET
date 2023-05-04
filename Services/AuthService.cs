@@ -28,7 +28,7 @@ namespace ResumeMaker.Services
         {
            ServiceResponse<User> response = new ServiceResponse<User>();
             /*
-             * USER LOGIN LOGIC
+             * USER LOGIN LOGI
             */
             return response;
         }
