@@ -67,7 +67,7 @@ namespace ResumeMaker.Services
                 }
                 throw new BadRequestException(stringBuilder.ToString());
             }
-            response = null; // await Login(_mapper.Map<UserLoginDto>(user));
+            response = await Login(_mapper.Map<UserLoginDto>(user));
             return response;
 
         }
