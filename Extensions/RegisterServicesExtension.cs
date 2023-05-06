@@ -1,4 +1,5 @@
-﻿using ResumeMaker.Services;
+﻿using ResumeMaker.API.Services;
+using ResumeMaker.Services;
 
 namespace ResumeMaker.API.Extensions
 {
@@ -7,6 +8,7 @@ namespace ResumeMaker.API.Extensions
         public static void RegisterServices(this IServiceCollection service)
         {
             service.AddScoped<IAuthService, AuthService>();
+            service.AddScoped<IInformationService, InformationService>();
         }
     }
 }
