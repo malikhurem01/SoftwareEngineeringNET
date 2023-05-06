@@ -30,6 +30,17 @@ namespace ResumeMaker.API.Controllers
             return await _informationService.AddUserEducation(tokenValue, userInfo);
         }
 
+        [HttpPut("education")]
+        public async Task<ActionResult<ServiceResponse<GetEducationDto>>> ModifyUserEducation(ModifyEducationDto userInfo)
+        {
+            Request.Headers.TryGetValue("Authorization", out var token);
+            string tokenValue = token
+                .ToString()
+                .Split(" ")
+                .ElementAt(1);
+            return await _informationService.ModifyUserEducation(tokenValue, userInfo);
+        }
+
         [HttpPost("experience")]
         public async Task<ActionResult<ServiceResponse<GetExperienceDto>>> AddUserExperience(AddExperienceDto userInfo)
         {
