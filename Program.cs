@@ -7,8 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.RegisterServices();
-builder.Services.AddControllers().AddJsonOptions(options =>
-                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+builder.Services.RegisterControllers();
 builder.Services.RegisterDBContext(builder.Configuration);
 builder.Services.RegisterIdentityAuthentication(builder.Configuration);
 builder.Services.RegisterJWTAuthentication(builder.Configuration);
