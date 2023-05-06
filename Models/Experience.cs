@@ -3,6 +3,7 @@
     public class Experience
     {
         public int Id { get; set; }
+        public string UserId { get; set; } = string.Empty;
         public User User { get; set; }
         public string CompanyName { get; set; } = string.Empty;
         public string JobTitle { get; set; } = string.Empty;
