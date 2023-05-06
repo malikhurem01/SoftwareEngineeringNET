@@ -1,5 +1,4 @@
-﻿
-namespace ResumeMaker.API.DTOs
+﻿namespace ResumeMaker.API.DTOs.EducationDTOs
 {
     public class AddEducationDto
     {

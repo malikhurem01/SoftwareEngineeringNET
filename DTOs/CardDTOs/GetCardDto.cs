@@ -1,8 +1,11 @@
-﻿
-namespace ResumeMaker.API.DTOs
+﻿using ResumeMaker.Models;
+
+namespace ResumeMaker.API.DTOs.CardDTOs
 {
-    public class AddCardDto
+    public class GetCardDto
     {
+        public int Id { get; set; }
+        public string UserId { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
         public string Number { get; set; } = string.Empty;
         public DateTime DateStart { get; set; }

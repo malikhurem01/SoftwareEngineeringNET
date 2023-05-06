@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.AspNetCore.Identity;
 using ResumeMaker.Data;
 
 namespace ResumeMaker.Extensions
@@ -27,25 +25,6 @@ namespace ResumeMaker.Extensions
                 .AddSignInManager<SignInManager<IdentityUser>>()
                 .AddEntityFrameworkStores<DataContext>()
                 .AddDefaultTokenProviders();
-            service.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(options =>
-            {
-                options.RequireHttpsMetadata = false;
-                options.SaveToken = true;
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuer = false,
-                    ValidateAudience = false,
-                    ValidateLifetime = true,
-                    ClockSkew = TimeSpan.Zero,
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8
-                .GetBytes(config.GetSection("JWTSettings:SecurityKey").Value))
-                };
-            });
         }
     }
 }

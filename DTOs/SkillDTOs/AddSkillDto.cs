@@ -1,5 +1,5 @@
 ﻿
-namespace ResumeMaker.API.DTOs
+namespace ResumeMaker.API.DTOs.SkillDTOs
 {
     public class AddSkillDto
     {

@@ -1,4 +1,4 @@
-﻿namespace ResumeMaker.API.DTOs
+﻿namespace ResumeMaker.API.DTOs.ExperienceDTOs
 {
     public class AddExperienceDto
     {

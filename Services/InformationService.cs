@@ -1,6 +1,12 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 using ResumeMaker.API.DTOs;
+using ResumeMaker.API.DTOs.CardDTOs;
+using ResumeMaker.API.DTOs.EducationDTOs;
+using ResumeMaker.API.DTOs.ExperienceDTOs;
+using ResumeMaker.API.DTOs.LanguageDTOs;
+using ResumeMaker.API.DTOs.SkillDTOs;
 using ResumeMaker.Data;
 using ResumeMaker.Models;
 using ResumeMaker.Models.Exceptions;
@@ -182,6 +188,28 @@ namespace ResumeMaker.API.Services
 
             response.Data = _mapper.Map<GetCardDto>(userInfo);
             response.Message = "Card has been successfully added for user " + user.NormalizedUserName + ".";
+            return response;
+        }
+
+        public async Task<ServiceResponse<GetUserInfoDto>> GetAllUserInfo(string token)
+        {
+            var response = new ServiceResponse<GetUserInfoDto>();
+            var decodedToken = new JwtSecurityTokenHandler().ReadJwtToken(token);
+            var userId = decodedToken.Claims
+                .Where(claim => claim.Type
+                .Equals("nameid"))
+                .Select(claim => claim.Value)
+                .SingleOrDefault();
+
+            var user = await _context.Users.Where(user => user.Id.Equals(userId)).Include(user => user.Education).Include(user => user.Experiences).Include(user => user.Languages).Include(user => user.Skills).FirstOrDefaultAsync();
+
+            if (user == null)
+            {
+                throw new EntityNotFoundException("User not found.");
+            }
+
+            response.Data = _mapper.Map<GetUserInfoDto>(user);
+            response.Message = "User " + user.NormalizedUserName + "'s data is fetched.";
             return response;
         }
     }

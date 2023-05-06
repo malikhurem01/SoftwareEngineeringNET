@@ -1,5 +1,4 @@
-﻿
-namespace ResumeMaker.API.DTOs
+﻿namespace ResumeMaker.API.DTOs.LanguageDTOs
 {
     public class AddLanguageDto
     {

@@ -1,5 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ResumeMaker.API.DTOs;
+using ResumeMaker.API.DTOs.CardDTOs;
+using ResumeMaker.API.DTOs.EducationDTOs;
+using ResumeMaker.API.DTOs.ExperienceDTOs;
+using ResumeMaker.API.DTOs.LanguageDTOs;
+using ResumeMaker.API.DTOs.SkillDTOs;
 using ResumeMaker.API.Services;
 using ResumeMaker.Models;
 
@@ -69,17 +74,15 @@ namespace ResumeMaker.API.Controllers
             return await _informationService.AddUserCard(tokenValue, userInfo);
         }
 
-        [HttpGet]
-        public Task<ActionResult<ServiceResponse<AddInformationDto>>> GetUserInformation()
+        [HttpGet("all/info")]
+        public async Task<ActionResult<ServiceResponse<GetUserInfoDto>>> GetAllUserInfo()
         {
-            return null;
+            Request.Headers.TryGetValue("Authorization", out var token);
+            string tokenValue = token
+                .ToString()
+                .Split(" ")
+                .ElementAt(1);
+            return await _informationService.GetAllUserInfo(tokenValue);
         }
-
-        [HttpDelete]
-        public Task<ActionResult<ServiceResponse<string>>> RemoveUserInformation(AddInformationDto userInfo)
-        {
-            return null;
-        }
-
     }
 }
