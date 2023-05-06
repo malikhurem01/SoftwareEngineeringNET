@@ -5,11 +5,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.RegisterAutoMapper();
-builder.Services.AddControllers();
 builder.Services.RegisterServices();
+builder.Services.AddControllers();
 builder.Services.RegisterDBContext(builder.Configuration);
 builder.Services.RegisterIdentityAuthentication(builder.Configuration);
+builder.Services.RegisterAutoMapper();
 
 var app = builder.Build();
 
