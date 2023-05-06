@@ -18,6 +18,7 @@ namespace ResumeMaker.API.AutoMapperMaps
             CreateMap<GetEducationDto, Education>();
             CreateMap<AddEducationDto, GetEducationDto>();
             CreateMap<Education, GetEducationDto>();
+            CreateMap<ModifyEducationDto, Education>();
 
             CreateMap<AddExperienceDto, Experience>();
             CreateMap<GetExperienceDto, AddExperienceDto>();
