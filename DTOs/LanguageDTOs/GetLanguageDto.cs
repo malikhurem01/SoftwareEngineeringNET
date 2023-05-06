@@ -1,11 +1,12 @@
-﻿namespace ResumeMaker.Models
+﻿using ResumeMaker.Models;
+
+namespace ResumeMaker.API.DTOs.LanguageDTOs
 {
-    public class Skill
+    public class GetLanguageDto
     {
         public int Id { get; set; }
         public string UserId { get; set; } = string.Empty;
-        public User User { get; set; }
         public string Name { get; set; } = string.Empty;
-        public string Level { get; set; } = string.Empty;
+        public int Level { get; set; }
     }
 }

@@ -1,15 +1,18 @@
 using ResumeMaker.API.Extensions;
 using ResumeMaker.Extensions;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.RegisterAutoMapper();
-builder.Services.AddControllers();
 builder.Services.RegisterServices();
+builder.Services.AddControllers().AddJsonOptions(options =>
+                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 builder.Services.RegisterDBContext(builder.Configuration);
 builder.Services.RegisterIdentityAuthentication(builder.Configuration);
+builder.Services.RegisterJWTAuthentication(builder.Configuration);
+builder.Services.RegisterAutoMapper();
 
 var app = builder.Build();
 

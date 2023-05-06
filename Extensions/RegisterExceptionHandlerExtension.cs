@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ResumeMaker.Extensions
 {
-    public static class RegisterExceptionHandler
+    public static class RegisterExceptionHandlerExtension
     {
         public static void ConfigureExceptionHandler(this IApplicationBuilder app)
         {
