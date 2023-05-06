@@ -69,7 +69,6 @@ namespace ResumeMaker.Services
             }
             response = await Login(_mapper.Map<UserLoginDto>(user));
             return response;
-
         }
 
         public string CreateToken(User user)
