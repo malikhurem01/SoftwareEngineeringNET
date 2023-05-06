@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query.Internal;
 using ResumeMaker.API.DTOs;
 using ResumeMaker.API.DTOs.CardDTOs;
 using ResumeMaker.API.DTOs.EducationDTOs;
@@ -60,6 +59,45 @@ namespace ResumeMaker.API.Services
 
             response.Data = _mapper.Map<GetEducationDto>(userInfo);
             response.Message = "Education has been successfully added for user " + user.NormalizedUserName + ".";
+            return response;
+        }
+        public async Task<ServiceResponse<GetEducationDto>> ModifyUserEducation(string token, ModifyEducationDto userInfo)
+        {
+            var response = new ServiceResponse<GetEducationDto>();
+            var decodedToken = new JwtSecurityTokenHandler().ReadJwtToken(token);
+            var userId = decodedToken.Claims
+                .Where(claim => claim.Type
+                .Equals("nameid"))
+                .Select(claim => claim.Value)
+                .SingleOrDefault();
+
+            var educationFetched = await _context.Education.Where(education => education.Id == userInfo.Id).Where(education => education.UserId.Equals(userId)).Include(education => education.User).FirstOrDefaultAsync();
+
+            if (educationFetched == null)
+            {
+                throw new EntityNotFoundException("Education Info not found.");
+            }
+
+            if (userInfo.DateStart > userInfo.DateEnd)
+            {
+                throw new BadRequestException("Start date can not be greater than the end date.");
+            }
+
+            if (userInfo.CurrentlyStudying && userInfo.DateEnd > userInfo.DateStart)
+            {
+                throw new BadRequestException("Can not have end date if the user is currently studying");
+            }
+
+            educationFetched.DateStart = userInfo.DateStart;
+            educationFetched.DateEnd = userInfo.DateEnd;
+            educationFetched.CurrentlyStudying = userInfo.CurrentlyStudying;
+            educationFetched.Major = userInfo.Major;
+            educationFetched.InstitutionTitle = userInfo.InstitutionTitle;
+
+            await _context.SaveChangesAsync();
+
+            response.Data = _mapper.Map<GetEducationDto>(educationFetched);
+            response.Message = "Education has been successfully modified for user " + educationFetched.User.NormalizedUserName + ".";
             return response;
         }
 
