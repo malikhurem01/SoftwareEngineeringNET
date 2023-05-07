@@ -8,7 +8,7 @@ namespace ResumeMaker.API.Extensions
         public static void RegisterServices(this IServiceCollection service)
         {
             service.AddScoped<IAuthService, AuthService>();
-            service.AddScoped<IInformationService, InformationService>();
+            service.AddTransient<IInformationService, InformationService>();
         }
     }
 }
