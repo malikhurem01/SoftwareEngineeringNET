@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using ResumeMaker.API.DTOs.SkillDTOs;
+using ResumeMaker.Models;
 
 namespace ResumeMaker.API.AutoMapperMaps
 {
