@@ -43,11 +43,6 @@ namespace ResumeMaker.API.Services
             {
                 throw new BadRequestException("Start date can not be greater than the end date.");
             }
-            
-            if(userInfo.CurrentlyStudying && userInfo.DateEnd > userInfo.DateStart)
-            {
-                throw new BadRequestException("Can not have end date if the user is currently studying");
-            }
 
             Education education = _mapper.Map<Education>(userInfo);
 
@@ -81,11 +76,6 @@ namespace ResumeMaker.API.Services
             if (userInfo.DateStart > userInfo.DateEnd)
             {
                 throw new BadRequestException("Start date can not be greater than the end date.");
-            }
-
-            if (userInfo.CurrentlyStudying && userInfo.DateEnd > userInfo.DateStart)
-            {
-                throw new BadRequestException("Can not have end date if the user is currently studying");
             }
 
             educationFetched.DateStart = userInfo.DateStart;
@@ -123,11 +113,6 @@ namespace ResumeMaker.API.Services
                 throw new BadRequestException("Start date can not be greater than the end date.");
             }
 
-            if (userInfo.CurrentlyWorking && userInfo.DateEnd > userInfo.DateStart)
-            {
-                throw new BadRequestException("Can not have end date if the user is currently working");
-            }
-
             Experience experience = _mapper.Map<Experience>(userInfo);
 
             experience.UserId = user.Id;
@@ -138,6 +123,43 @@ namespace ResumeMaker.API.Services
 
             response.Data = _mapper.Map<GetExperienceDto>(userInfo);
             response.Message = "Experience has been successfully added for user " + user.NormalizedUserName + ".";
+            return response;
+        }
+
+        public async Task<ServiceResponse<GetExperienceDto>> ModifyUserExperience(string token, ModifyExperienceDto userInfo)
+        {
+            var response = new ServiceResponse<GetExperienceDto>();
+            var decodedToken = new JwtSecurityTokenHandler().ReadJwtToken(token);
+            var userId = decodedToken.Claims
+                .Where(claim => claim.Type
+                .Equals("nameid"))
+                .Select(claim => claim.Value)
+                .SingleOrDefault();
+
+            var experienceFetched = await _context.Experiences.Where(experience => experience.Id == experience.Id).Where(experience => experience.UserId.Equals(userId)).Include(experience => experience.User).FirstOrDefaultAsync();
+
+            if (experienceFetched == null)
+            {
+                throw new EntityNotFoundException("Experience Info not found.");
+            }
+
+            if (userInfo.DateStart > userInfo.DateEnd)
+            {
+                throw new BadRequestException("Start date can not be greater than the end date.");
+            }
+
+            experienceFetched.DateStart = userInfo.DateStart;
+            experienceFetched.DateEnd = userInfo.DateEnd;
+            experienceFetched.CurrentlyWorking = userInfo.CurrentlyWorking;
+            experienceFetched.CompanyName = userInfo.CompanyName;
+            experienceFetched.Description = userInfo.Description;
+            experienceFetched.Location = userInfo.Location;
+            experienceFetched.JobTitle = userInfo.JobTitle;
+
+            await _context.SaveChangesAsync();
+
+            response.Data = _mapper.Map<GetExperienceDto>(experienceFetched);
+            response.Message = "Experience has been successfully modified for user " + experienceFetched.User.NormalizedUserName + ".";
             return response;
         }
 
@@ -170,6 +192,33 @@ namespace ResumeMaker.API.Services
             response.Message = "Skill has been successfully added for user " + user.NormalizedUserName + ".";
             return response;
         }
+        public async Task<ServiceResponse<GetSkillDto>> ModifyUserSkill(string token, ModifySkillDto userInfo)
+        {
+            var response = new ServiceResponse<GetSkillDto>();
+            var decodedToken = new JwtSecurityTokenHandler().ReadJwtToken(token);
+            var userId = decodedToken.Claims
+                .Where(claim => claim.Type
+                .Equals("nameid"))
+                .Select(claim => claim.Value)
+                .SingleOrDefault();
+
+            var skillFetched = await _context.Skills.Where(skill => skill.Id == skill.Id).Where(skill => skill.UserId.Equals(userId)).Include(skill => skill.User).FirstOrDefaultAsync();
+
+            if (skillFetched == null)
+            {
+                throw new EntityNotFoundException("Skill Info not found.");
+            }
+
+            skillFetched.Level = userInfo.Level;
+            skillFetched.Name = userInfo.Name;
+
+            await _context.SaveChangesAsync();
+
+            response.Data = _mapper.Map<GetSkillDto>(skillFetched);
+            response.Message = "Skill has been successfully modified for user " + skillFetched.User.NormalizedUserName + ".";
+            return response;
+        }
+
         public async Task<ServiceResponse<GetLanguageDto>> AddUserLanguage(string token, AddLanguageDto userInfo)
         {
             var response = new ServiceResponse<GetLanguageDto>();
@@ -199,6 +248,33 @@ namespace ResumeMaker.API.Services
             response.Message = "Language has been successfully added for user " + user.NormalizedUserName + ".";
             return response;
         }
+        public async Task<ServiceResponse<GetLanguageDto>> ModifyUserLanguage(string token, ModifyLanguageDto userInfo)
+        {
+            var response = new ServiceResponse<GetLanguageDto>();
+            var decodedToken = new JwtSecurityTokenHandler().ReadJwtToken(token);
+            var userId = decodedToken.Claims
+                .Where(claim => claim.Type
+                .Equals("nameid"))
+                .Select(claim => claim.Value)
+                .SingleOrDefault();
+
+            var languageFetched = await _context.Languages.Where(language => language.Id == userInfo.Id).Where(language => language.UserId.Equals(userId)).Include(language => language.User).FirstOrDefaultAsync();
+
+            if (languageFetched == null)
+            {
+                throw new EntityNotFoundException("Lanuage Info not found.");
+            }
+
+            languageFetched.Level = userInfo.Level;
+            languageFetched.Name = userInfo.Name;
+
+            await _context.SaveChangesAsync();
+
+            response.Data = _mapper.Map<GetLanguageDto>(languageFetched);
+            response.Message = "Language has been successfully modified for user " + languageFetched.User.NormalizedUserName + ".";
+            return response;
+        }
+
         public async Task<ServiceResponse<GetCardDto>> AddUserCard(string token, AddCardDto userInfo)
         {
             var response = new ServiceResponse<GetCardDto>();
@@ -226,6 +302,35 @@ namespace ResumeMaker.API.Services
 
             response.Data = _mapper.Map<GetCardDto>(userInfo);
             response.Message = "Card has been successfully added for user " + user.NormalizedUserName + ".";
+            return response;
+        }
+
+        public async Task<ServiceResponse<GetCardDto>> ModifyUserCard(string token, ModifyCardDto userInfo)
+        {
+            var response = new ServiceResponse<GetCardDto>();
+            var decodedToken = new JwtSecurityTokenHandler().ReadJwtToken(token);
+            var userId = decodedToken.Claims
+                .Where(claim => claim.Type
+                .Equals("nameid"))
+                .Select(claim => claim.Value)
+                .SingleOrDefault();
+
+            var cardFetched = await _context.Cards.Where(card => card.Id == userInfo.Id).Where(card => card.UserId.Equals(userId)).Include(card => card.User).FirstOrDefaultAsync();
+
+            if (cardFetched == null)
+            {
+                throw new EntityNotFoundException("Card Info not found.");
+            }
+
+            cardFetched.DateEnd = userInfo.DateEnd;
+            cardFetched.Name = userInfo.Name;
+            cardFetched.Number = userInfo.Number;
+            cardFetched.CVC = userInfo.CVC;
+
+            await _context.SaveChangesAsync();
+
+            response.Data = _mapper.Map<GetCardDto>(cardFetched);
+            response.Message = "Card has been successfully modified for user " + cardFetched.User.NormalizedUserName + ".";
             return response;
         }
 
