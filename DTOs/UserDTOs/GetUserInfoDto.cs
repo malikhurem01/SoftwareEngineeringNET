@@ -4,7 +4,7 @@ using ResumeMaker.API.DTOs.LanguageDTOs;
 using ResumeMaker.API.DTOs.SkillDTOs;
 using ResumeMaker.Models;
 
-namespace ResumeMaker.API.DTOs
+namespace ResumeMaker.API.DTOs.UserDTOs
 {
     public class GetUserInfoDto
     {
