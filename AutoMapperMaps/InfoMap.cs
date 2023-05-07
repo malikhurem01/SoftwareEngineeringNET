@@ -25,24 +25,28 @@ namespace ResumeMaker.API.AutoMapperMaps
             CreateMap<GetExperienceDto, Experience>();
             CreateMap<AddExperienceDto, GetExperienceDto>();
             CreateMap<Experience, GetExperienceDto>();
+            CreateMap<ModifyExperienceDto, Experience>();
 
             CreateMap<AddSkillDto, Skill>();
             CreateMap<GetSkillDto, AddSkillDto>();
             CreateMap<GetSkillDto, Skill>();
             CreateMap<AddSkillDto, GetSkillDto>();
             CreateMap<Skill, GetSkillDto>();
+            CreateMap<ModifySkillDto, Skill>();
 
             CreateMap<AddLanguageDto, Language>();
             CreateMap<GetLanguageDto, AddLanguageDto>();
             CreateMap<GetLanguageDto, Language>();
             CreateMap<AddLanguageDto, GetLanguageDto>();
             CreateMap<Language, GetLanguageDto>();
+            CreateMap<ModifyLanguageDto, Language>();
 
             CreateMap<AddCardDto, Card>();
             CreateMap<GetCardDto, AddCardDto>();
             CreateMap<GetCardDto, Card>();
             CreateMap<AddCardDto, GetCardDto>();
             CreateMap<Card, GetCardDto>();
+            CreateMap<ModifyCardDto, Card>();
 
             CreateMap<User, GetUserInfoDto>()
                 .ForMember(dest => dest.Education, opt => opt.MapFrom(src => src.Education))
