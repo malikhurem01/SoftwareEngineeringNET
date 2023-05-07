@@ -52,6 +52,17 @@ namespace ResumeMaker.API.Controllers
             return await _informationService.AddUserExperience(tokenValue, userInfo);
         }
 
+        [HttpPut("experience")]
+        public async Task<ActionResult<ServiceResponse<GetExperienceDto>>> ModifyUserExperience(ModifyExperienceDto userInfo)
+        {
+            Request.Headers.TryGetValue("Authorization", out var token);
+            string tokenValue = token
+                .ToString()
+                .Split(" ")
+                .ElementAt(1);
+            return await _informationService.ModifyUserExperience(tokenValue, userInfo);
+        }
+
         [HttpPost("skill")]
         public async Task<ActionResult<ServiceResponse<GetSkillDto>>> AddUserSkill(AddSkillDto userInfo)
         {
@@ -61,6 +72,17 @@ namespace ResumeMaker.API.Controllers
                 .Split(" ")
                 .ElementAt(1);
             return await _informationService.AddUserSkill(tokenValue, userInfo);
+        }
+
+        [HttpPut("skill")]
+        public async Task<ActionResult<ServiceResponse<GetSkillDto>>> ModifyUserSkill(ModifySkillDto userInfo)
+        {
+            Request.Headers.TryGetValue("Authorization", out var token);
+            string tokenValue = token
+                .ToString()
+                .Split(" ")
+                .ElementAt(1);
+            return await _informationService.ModifyUserSkill(tokenValue, userInfo);
         }
 
         [HttpPost("language")]
@@ -74,6 +96,17 @@ namespace ResumeMaker.API.Controllers
             return await _informationService.AddUserLanguage(tokenValue, userInfo);
         }
 
+        [HttpPut("language")]
+        public async Task<ActionResult<ServiceResponse<GetLanguageDto>>> ModifyUserLanguage(ModifyLanguageDto userInfo)
+        {
+            Request.Headers.TryGetValue("Authorization", out var token);
+            string tokenValue = token
+                .ToString()
+                .Split(" ")
+                .ElementAt(1);
+            return await _informationService.ModifyUserLanguage(tokenValue, userInfo);
+        }
+
         [HttpPost("card")]
         public async Task<ActionResult<ServiceResponse<GetCardDto>>> AddUserCard(AddCardDto userInfo)
         {
@@ -83,6 +116,17 @@ namespace ResumeMaker.API.Controllers
                 .Split(" ")
                 .ElementAt(1);
             return await _informationService.AddUserCard(tokenValue, userInfo);
+        }
+
+        [HttpPut("card")]
+        public async Task<ActionResult<ServiceResponse<GetCardDto>>> ModifyUserCard(ModifyCardDto userInfo)
+        {
+            Request.Headers.TryGetValue("Authorization", out var token);
+            string tokenValue = token
+                .ToString()
+                .Split(" ")
+                .ElementAt(1);
+            return await _informationService.ModifyUserCard(tokenValue, userInfo);
         }
 
         [HttpGet("all/info")]
