@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ResumeMaker.API.DTOs;
+using ResumeMaker.API.Services.Authentication;
 using ResumeMaker.Models;
-using ResumeMaker.Services;
 
 namespace ResumeMaker.API.Controllers
 {

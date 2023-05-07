@@ -9,10 +9,10 @@ namespace ResumeMaker.API.Controllers
     [Route("/api/[controller]")]
     public class CardInfoController : ControllerBase
     {
-        private readonly IInformationService _informationService;
-        public CardInfoController(IInformationService informationService)
+        private readonly ICardService _cardService;
+        public CardInfoController(ICardService cardService)
         {
-            _informationService = informationService;
+            _cardService = cardService;
         }
 
         [HttpPost("add")]
@@ -23,7 +23,7 @@ namespace ResumeMaker.API.Controllers
                 .ToString()
                 .Split(" ")
                 .ElementAt(1);
-            return await _informationService.AddUserCard(tokenValue, userInfo);
+            return await _cardService.AddUserCard(tokenValue, userInfo);
         }
 
         [HttpPut("update")]
@@ -34,7 +34,7 @@ namespace ResumeMaker.API.Controllers
                 .ToString()
                 .Split(" ")
                 .ElementAt(1);
-            return await _informationService.ModifyUserCard(tokenValue, userInfo);
+            return await _cardService.ModifyUserCard(tokenValue, userInfo);
         }
     }
 }

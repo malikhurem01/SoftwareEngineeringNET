@@ -9,10 +9,10 @@ namespace ResumeMaker.API.Controllers
     [Route("/api/[controller]")]
     public class LanguageInfoController : ControllerBase
     {
-        private readonly IInformationService _informationService;
-        public LanguageInfoController(IInformationService informationService)
+        private readonly ILanguageService _languageService;
+        public LanguageInfoController(ILanguageService languageService)
         {
-            _informationService = informationService;
+            _languageService = languageService;
         }
 
         [HttpPost("add")]
@@ -23,7 +23,7 @@ namespace ResumeMaker.API.Controllers
                 .ToString()
                 .Split(" ")
                 .ElementAt(1);
-            return await _informationService.AddUserLanguage(tokenValue, userInfo);
+            return await _languageService.AddUserLanguage(tokenValue, userInfo);
         }
 
         [HttpPut("update")]
@@ -34,7 +34,7 @@ namespace ResumeMaker.API.Controllers
                 .ToString()
                 .Split(" ")
                 .ElementAt(1);
-            return await _informationService.ModifyUserLanguage(tokenValue, userInfo);
+            return await _languageService.ModifyUserLanguage(tokenValue, userInfo);
         }
     }
 }

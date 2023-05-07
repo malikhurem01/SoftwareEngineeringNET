@@ -9,10 +9,10 @@ namespace ResumeMaker.API.Controllers
     [Route("/api/[controller]")]
     public class ExperienceInfoController : ControllerBase
     {
-        private readonly IInformationService _informationService;
-        public ExperienceInfoController(IInformationService informationService)
+        private readonly IExperienceService _experienceService;
+        public ExperienceInfoController(IExperienceService experienceService)
         {
-            _informationService = informationService;
+            _experienceService = experienceService;
         }
 
         [HttpPost("add")]
@@ -23,7 +23,7 @@ namespace ResumeMaker.API.Controllers
                 .ToString()
                 .Split(" ")
                 .ElementAt(1);
-            return await _informationService.AddUserExperience(tokenValue, userInfo);
+            return await _experienceService.AddUserExperience(tokenValue, userInfo);
         }
 
         [HttpPut("update")]
@@ -34,7 +34,7 @@ namespace ResumeMaker.API.Controllers
                 .ToString()
                 .Split(" ")
                 .ElementAt(1);
-            return await _informationService.ModifyUserExperience(tokenValue, userInfo);
+            return await _experienceService.ModifyUserExperience(tokenValue, userInfo);
         }
     }
 }
