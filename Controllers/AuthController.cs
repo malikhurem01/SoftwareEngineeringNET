@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ResumeMaker.API.DTOs;
+using ResumeMaker.API.Services.Authentication;
 using ResumeMaker.Models;
-using ResumeMaker.Services;
 
 namespace ResumeMaker.API.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("/api/[controller]")]
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;

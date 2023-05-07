@@ -16,12 +16,11 @@ namespace ResumeMaker.Data
         {
             base.OnModelCreating(_modelBuilder);
        
-        _modelBuilder.Entity<User>().HasMany(u => u.Experiences);
+            _modelBuilder.Entity<User>().HasMany(u => u.Experiences);
             _modelBuilder.Entity<User>().HasMany(u => u.Education);
             _modelBuilder.Entity<User>().HasMany(u => u.Languages);
             _modelBuilder.Entity<User>().HasMany(u => u.Skills);
             _modelBuilder.Entity<User>().HasMany(u => u.Cards);
-
         }
 
         public DbSet<User> Users { get; set; }

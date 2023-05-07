@@ -8,7 +8,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace ResumeMaker.Services
+namespace ResumeMaker.API.Services.Authentication
 {
     public class AuthService : IAuthService
     {

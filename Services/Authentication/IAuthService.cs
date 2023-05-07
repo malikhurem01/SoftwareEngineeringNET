@@ -1,7 +1,7 @@
 ﻿using ResumeMaker.API.DTOs;
 using ResumeMaker.Models;
 
-namespace ResumeMaker.Services
+namespace ResumeMaker.API.Services.Authentication
 {
     public interface IAuthService
     {
