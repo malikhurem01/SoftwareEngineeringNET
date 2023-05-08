@@ -11,6 +11,7 @@ builder.Services.RegisterDBContext(builder.Configuration);
 builder.Services.RegisterIdentityAuthentication(builder.Configuration);
 builder.Services.RegisterJWTAuthentication(builder.Configuration);
 builder.Services.RegisterAutoMapper();
+builder.Services.RegisterCors(builder.Configuration);
 
 var app = builder.Build();
 
@@ -24,6 +25,8 @@ if (app.Environment.IsDevelopment())
 app.ConfigureExceptionHandler();
 
 app.UseHttpsRedirection();
+
+app.UseCors(RegisterCorsExtension.origin);
 
 app.UseAuthorization();
 
