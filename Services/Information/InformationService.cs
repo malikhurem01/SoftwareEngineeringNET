@@ -1,8 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using ResumeMaker.API.DTOs;
-using ResumeMaker.API.DTOs.CardDTOs;
-using ResumeMaker.API.DTOs.LanguageDTOs;
 using ResumeMaker.Data;
 using ResumeMaker.Models;
 using ResumeMaker.Models.Exceptions;
