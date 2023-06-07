@@ -28,7 +28,7 @@ namespace ResumeMaker.Data
         public DbSet<Education> Education { get; set; }
         public DbSet<Skill> Skills { get; set; }
         public DbSet<Language> Languages { get; set; }
-        public DbSet<Template> Templates { get; set; }
+        public DbSet<TemplateHistory> TemplateHistory { get; set; }
         public DbSet<Card> Cards { get; set; }
     }
 }

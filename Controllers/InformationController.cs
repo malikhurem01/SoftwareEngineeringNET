@@ -15,7 +15,7 @@ namespace ResumeMaker.API.Controllers
         }
 
         [HttpGet("all/info")]
-        public async Task<ActionResult<ServiceResponse<UserInfoDto>>> GetAllUserInfo()
+        public async Task<ActionResult<ServiceResponse<GetUserInfoDto>>> GetAllUserInfo()
         {
             Request.Headers.TryGetValue("Authorization", out var token);
             string tokenValue = token

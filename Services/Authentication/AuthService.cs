@@ -55,7 +55,10 @@ namespace ResumeMaker.API.Services.Authentication
         public async Task<ServiceResponse<GetUserDto>> RegisterUser(RegisterUserDto user)
         {
             ServiceResponse<GetUserDto> response = new ServiceResponse<GetUserDto>();
-            var userMap = _mapper.Map<User>(user);
+            User userMap = new User();
+            userMap.FirstName = user.FirstName;
+            userMap.LastName = user.LastName;
+            userMap.Email = user.Email;
             userMap.UserName = user.FirstName.ToLower() + user.LastName.ToLower();
             var result = await _userManager.CreateAsync(userMap, user.Password);
             StringBuilder stringBuilder = new StringBuilder();

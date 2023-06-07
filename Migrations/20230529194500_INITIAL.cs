@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace ResumeMaker.Migrations
+namespace ResumeMaker.API.Migrations
 {
-    public partial class newds : Migration
+    public partial class INITIAL : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -31,9 +31,6 @@ namespace ResumeMaker.Migrations
                     Discriminator = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    DateUpdated = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    DateOfBirth = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Country = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     City = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -57,21 +54,6 @@ namespace ResumeMaker.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Templates",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    HTMLCode = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Templates", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -189,7 +171,6 @@ namespace ResumeMaker.Migrations
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Number = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DateStart = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DateEnd = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CVC = table.Column<int>(type: "int", nullable: false)
                 },
@@ -205,11 +186,32 @@ namespace ResumeMaker.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "TemplateHistory",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    TemplateId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TemplateHistory", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TemplateHistory_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Education",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    TemplateHistoryId = table.Column<int>(type: "int", nullable: true),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     InstitutionTitle = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Major = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -226,6 +228,11 @@ namespace ResumeMaker.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Education_TemplateHistory_TemplateHistoryId",
+                        column: x => x.TemplateHistoryId,
+                        principalTable: "TemplateHistory",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -234,6 +241,7 @@ namespace ResumeMaker.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    TemplateHistoryId = table.Column<int>(type: "int", nullable: true),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     CompanyName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     JobTitle = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -252,6 +260,11 @@ namespace ResumeMaker.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Experiences_TemplateHistory_TemplateHistoryId",
+                        column: x => x.TemplateHistoryId,
+                        principalTable: "TemplateHistory",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -260,6 +273,7 @@ namespace ResumeMaker.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    TemplateHistoryId = table.Column<int>(type: "int", nullable: true),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Level = table.Column<int>(type: "int", nullable: false)
@@ -273,6 +287,11 @@ namespace ResumeMaker.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Languages_TemplateHistory_TemplateHistoryId",
+                        column: x => x.TemplateHistoryId,
+                        principalTable: "TemplateHistory",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -281,6 +300,7 @@ namespace ResumeMaker.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    TemplateHistoryId = table.Column<int>(type: "int", nullable: true),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Level = table.Column<string>(type: "nvarchar(max)", nullable: false)
@@ -294,6 +314,11 @@ namespace ResumeMaker.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Skills_TemplateHistory_TemplateHistoryId",
+                        column: x => x.TemplateHistoryId,
+                        principalTable: "TemplateHistory",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
@@ -341,9 +366,19 @@ namespace ResumeMaker.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Education_TemplateHistoryId",
+                table: "Education",
+                column: "TemplateHistoryId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Education_UserId",
                 table: "Education",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Experiences_TemplateHistoryId",
+                table: "Experiences",
+                column: "TemplateHistoryId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Experiences_UserId",
@@ -351,13 +386,28 @@ namespace ResumeMaker.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Languages_TemplateHistoryId",
+                table: "Languages",
+                column: "TemplateHistoryId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Languages_UserId",
                 table: "Languages",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Skills_TemplateHistoryId",
+                table: "Skills",
+                column: "TemplateHistoryId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Skills_UserId",
                 table: "Skills",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TemplateHistory_UserId",
+                table: "TemplateHistory",
                 column: "UserId");
         }
 
@@ -394,10 +444,10 @@ namespace ResumeMaker.Migrations
                 name: "Skills");
 
             migrationBuilder.DropTable(
-                name: "Templates");
+                name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetRoles");
+                name: "TemplateHistory");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
