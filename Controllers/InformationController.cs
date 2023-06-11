@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ResumeMaker.API.DTOs;
 using ResumeMaker.API.Services;
 using ResumeMaker.Models;
 
 namespace ResumeMaker.API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("/api/[controller]")]
     public class InformationController : ControllerBase
