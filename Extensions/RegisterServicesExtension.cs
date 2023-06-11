@@ -1,5 +1,6 @@
 ﻿using ResumeMaker.API.Services;
 using ResumeMaker.API.Services.Authentication;
+using ResumeMaker.Services;
 
 namespace ResumeMaker.API.Extensions
 {
@@ -14,6 +15,7 @@ namespace ResumeMaker.API.Extensions
             service.AddTransient<IExperienceService, ExperienceService>();
             service.AddTransient<ILanguageService, LanguageService>();
             service.AddTransient<ICardService, CardService>();
+            service.AddTransient<ITemplateHistoryService, TemplateHistoryService>();
         }
     }
 }

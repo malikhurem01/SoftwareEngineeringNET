@@ -8,7 +8,7 @@ using ResumeMaker.Data;
 
 #nullable disable
 
-namespace ResumeMaker.Migrations
+namespace ResumeMaker.API.Migrations
 {
     [DbContext(typeof(DataContext))]
     partial class DataContextModelSnapshot : ModelSnapshot
@@ -276,7 +276,15 @@ namespace ResumeMaker.Migrations
                     b.Property<DateTime>("DateStart")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("InstitutionTitle")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Location")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -284,11 +292,16 @@ namespace ResumeMaker.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("TemplateHistoryId")
+                        .HasColumnType("int");
+
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("TemplateHistoryId");
 
                     b.HasIndex("UserId");
 
@@ -328,11 +341,20 @@ namespace ResumeMaker.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("TemplateHistoryId")
+                        .HasColumnType("int");
+
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("WorkingHours")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("TemplateHistoryId");
 
                     b.HasIndex("UserId");
 
@@ -354,11 +376,16 @@ namespace ResumeMaker.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("TemplateHistoryId")
+                        .HasColumnType("int");
+
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("TemplateHistoryId");
 
                     b.HasIndex("UserId");
 
@@ -381,6 +408,39 @@ namespace ResumeMaker.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("TemplateHistoryId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TemplateHistoryId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Skills");
+                });
+
+            modelBuilder.Entity("ResumeMaker.Models.TemplateHistory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateUpdated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("TemplateId")
+                        .HasColumnType("int");
+
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -389,32 +449,7 @@ namespace ResumeMaker.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Skills");
-                });
-
-            modelBuilder.Entity("ResumeMaker.Models.Template", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("HTMLCode")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Templates");
+                    b.ToTable("TemplateHistory");
                 });
 
             modelBuilder.Entity("ResumeMaker.Models.User", b =>
@@ -525,46 +560,92 @@ namespace ResumeMaker.Migrations
 
             modelBuilder.Entity("ResumeMaker.Models.Education", b =>
                 {
+                    b.HasOne("ResumeMaker.Models.TemplateHistory", "TemplateHistory")
+                        .WithMany("Education")
+                        .HasForeignKey("TemplateHistoryId");
+
                     b.HasOne("ResumeMaker.Models.User", "User")
                         .WithMany("Education")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("TemplateHistory");
+
                     b.Navigation("User");
                 });
 
             modelBuilder.Entity("ResumeMaker.Models.Experience", b =>
                 {
+                    b.HasOne("ResumeMaker.Models.TemplateHistory", "TemplateHistory")
+                        .WithMany("Experience")
+                        .HasForeignKey("TemplateHistoryId");
+
                     b.HasOne("ResumeMaker.Models.User", "User")
                         .WithMany("Experiences")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("TemplateHistory");
+
                     b.Navigation("User");
                 });
 
             modelBuilder.Entity("ResumeMaker.Models.Language", b =>
                 {
+                    b.HasOne("ResumeMaker.Models.TemplateHistory", "TemplateHistory")
+                        .WithMany("Languages")
+                        .HasForeignKey("TemplateHistoryId");
+
                     b.HasOne("ResumeMaker.Models.User", "User")
                         .WithMany("Languages")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("TemplateHistory");
+
                     b.Navigation("User");
                 });
 
             modelBuilder.Entity("ResumeMaker.Models.Skill", b =>
                 {
+                    b.HasOne("ResumeMaker.Models.TemplateHistory", "TemplateHistory")
+                        .WithMany("Skills")
+                        .HasForeignKey("TemplateHistoryId");
+
                     b.HasOne("ResumeMaker.Models.User", "User")
                         .WithMany("Skills")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("TemplateHistory");
+
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("ResumeMaker.Models.TemplateHistory", b =>
+                {
+                    b.HasOne("ResumeMaker.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("ResumeMaker.Models.TemplateHistory", b =>
+                {
+                    b.Navigation("Education");
+
+                    b.Navigation("Experience");
+
+                    b.Navigation("Languages");
+
+                    b.Navigation("Skills");
                 });
 
             modelBuilder.Entity("ResumeMaker.Models.User", b =>

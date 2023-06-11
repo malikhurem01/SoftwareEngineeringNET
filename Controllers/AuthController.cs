@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ResumeMaker.API.DTOs;
 using ResumeMaker.API.Services.Authentication;
 using ResumeMaker.Models;
@@ -26,6 +27,18 @@ namespace ResumeMaker.API.Controllers
         public async Task<ActionResult<ServiceResponse<GetUserDto>>> LoginUser(UserLoginDto user)
         {
             var response = await _authService.Login(user);
+            return Ok(response);
+        }
+
+        [HttpGet("current/user")]
+        public async Task<ActionResult<ServiceResponse<GetUserDto>>> CurrentUser()
+        {
+            Request.Headers.TryGetValue("Authorization", out var token);
+            string tokenValue = token
+                .ToString()
+                .Split(" ")
+                .ElementAt(1);
+            var response = await _authService.CurrentUser(tokenValue);
             return Ok(response);
         }
     }

@@ -12,6 +12,7 @@ namespace ResumeMaker.API.Extensions
             service.AddAutoMapper(typeof(ExperienceMap));
             service.AddAutoMapper(typeof(LanguageMap));
             service.AddAutoMapper(typeof(SkillMap));
+            service.AddAutoMapper(typeof(TemplateHistoryMap));
         }
     }
 }
