@@ -1,7 +1,11 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json.Linq;
 using ResumeMaker.API.DTOs;
+using ResumeMaker.API.DTOs.EducationDTOs;
+using ResumeMaker.Data;
 using ResumeMaker.Models;
 using ResumeMaker.Models.Exceptions;
 using System.IdentityModel.Tokens.Jwt;
@@ -16,13 +20,15 @@ namespace ResumeMaker.API.Services.Authentication
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
+        private readonly DataContext _context;
 
-        public AuthService(UserManager<IdentityUser> userManager, IConfiguration configuration, SignInManager<IdentityUser> signInManager, IMapper mapper)
+        public AuthService(UserManager<IdentityUser> userManager, IConfiguration configuration, SignInManager<IdentityUser> signInManager, IMapper mapper, DataContext context)
         {
             _userManager = userManager;
             _configuration = configuration;
             _signInManager = signInManager;
             _mapper = mapper;
+            _context = context;
         }
         public Task<ServiceResponse<GetUserDto>> GetUserByToken(string token)
         {
@@ -73,6 +79,28 @@ namespace ResumeMaker.API.Services.Authentication
             response = await Login(_mapper.Map<UserLoginDto>(user));
             return response;
         }
+        public async Task<ServiceResponse<GetUserDto>> CurrentUser(string token)
+        {
+            var response = new ServiceResponse<GetUserDto>();
+            var decodedToken = new JwtSecurityTokenHandler().ReadJwtToken(token);
+            var userId = decodedToken.Claims
+                .Where(claim => claim.Type
+                .Equals("nameid"))
+            .Select(claim => claim.Value)
+            .SingleOrDefault();
+
+            var user = await _context.Users.Where(user => user.Id.Equals(userId)).Include(user => user.Education).FirstOrDefaultAsync();
+
+            if (user == null)
+            {
+                throw new EntityNotFoundException("User not found.");
+            }
+
+            response.Data = _mapper.Map<GetUserDto>(user);
+            response.Message = "User successfully fetched.";
+            return response;
+        }
+
 
         public string CreateToken(User user)
         {
